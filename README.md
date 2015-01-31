@@ -1,5 +1,7 @@
 # Swift Dump
 
+[![Build Status](http://img.shields.io/travis/neonichu/swift-dump.svg?style=flat)](https://travis-ci.org/neonichu/swift-dump)
+
 PoC of a class-dumpy tool for Swift classes.
 
 ## Usage
