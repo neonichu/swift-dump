@@ -7,8 +7,8 @@ symbols() {
 trap 'rm -f test main *.syms' EXIT
 set -e
 
-xcrun swiftc test.swift
-./swift-dump.rb test|xcrun swiftc -
+xcrun -sdk macosx swiftc test.swift
+./swift-dump.rb test|xcrun -sdk macosx swiftc -
 
 symbols test >test.syms
 symbols main|sed 's/4main/4test/g' >main.syms
