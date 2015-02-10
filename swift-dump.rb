@@ -42,7 +42,7 @@ DUMP
 				variables(sclass).each do |var|
 					v = Swift::demangle_symbol(var).split('.')[2]
 
-					mangled_type = var.gsub(/^#{sclass}#{GETTER}#{v}/, '')
+					mangled_type = var.gsub(/^#{sclass}g[0-9]+#{v}/, '')
 					type = Swift::demangle_symbol(var).split(' : ')[1]
 					type = type.gsub(/Swift\./, '')
 
@@ -88,11 +88,6 @@ DUMP
 		CLASS = '__TFC'
 		DEALLOC = 'D'
 		DIRECT = '__TWvdvC'
-		FUNC = '3'
-		GETTER = 'g1'
-		MATERIALIZE = 'm1'
-		SETTER = 's1'
-		VOID_FUNC = '7'
 
 		def classes
 			relevant_symbols.select { |sym| sym.end_with?(DEALLOC) }.map { |sym| sym[0..-2] }
@@ -104,22 +99,22 @@ DUMP
 
 		def has_direct_field(mangled_class_prefix, variable_name, mangled_type)
 			prefix = mangled_class_prefix.gsub(CLASS, DIRECT)
-			expected_sym = "#{prefix}1#{variable_name}#{mangled_type}"
+			expected_sym = "#{prefix}#{variable_name.length}#{variable_name}#{mangled_type}"
 			@symbols.select{ |sym| sym == expected_sym }.length > 0
 		end
 
 		def functions(mangled_class_prefix)
-			relevant_symbols.select { |sym| sym[/^#{mangled_class_prefix}(#{FUNC}|#{VOID_FUNC})/] }
+			relevant_symbols.select { |sym| sym[/^#{mangled_class_prefix}[0-9]+/] }
 		end
 
 		def has_materialize(mangled_class_prefix, variable_name, mangled_type)
-			expected_sym = "#{mangled_class_prefix}#{MATERIALIZE}#{variable_name}#{mangled_type}"
-			relevant_symbols.select { |sym| sym == expected_sym }.length > 0
+			expected_sym = "#{mangled_class_prefix}m[0-9]+#{variable_name}#{mangled_type}"
+			relevant_symbols.select { |sym| sym[/^#{expected_sym}/] }.length > 0
 		end
 
 		def has_setter(mangled_class_prefix, variable_name, mangled_type)
-			expected_sym = "#{mangled_class_prefix}#{SETTER}#{variable_name}#{mangled_type}"
-			relevant_symbols.select { |sym| sym == expected_sym }.length > 0
+			expected_sym = "#{mangled_class_prefix}s[0-9]+#{variable_name}#{mangled_type}"
+			relevant_symbols.select { |sym| sym[/^#{expected_sym}/] }.length > 0
 		end
 
 		def relevant_symbols
@@ -127,7 +122,7 @@ DUMP
 		end
 
 		def variables(mangled_class_prefix)
-			relevant_symbols.select { |sym| sym[/^#{mangled_class_prefix}#{GETTER}/] }
+			relevant_symbols.select { |sym| sym[/^#{mangled_class_prefix}g[0-9]+/] }
 		end
 	end
 end

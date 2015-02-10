@@ -4,12 +4,17 @@ symbols() {
 	xcrun nm -g "$1"|awk '{print $3}'|grep '^__T'|sort|uniq
 }
 
-trap 'rm -f test main *.syms' EXIT
+run_test() {
+	xcrun -sdk macosx swiftc "$1.swift"
+	./swift-dump.rb "$1"|xcrun -sdk macosx swiftc -
+
+	symbols "$1" >"$1.syms"
+	symbols main|sed "s/4main/${#1}$1/g" >main.syms
+	diff "$1.syms" main.syms
+}
+
+trap 'rm -f f test main *.syms' EXIT
 set -e
 
-xcrun -sdk macosx swiftc test.swift
-./swift-dump.rb test|xcrun -sdk macosx swiftc -
-
-symbols test >test.syms
-symbols main|sed 's/4main/4test/g' >main.syms
-diff test.syms main.syms
+run_test "test"
+run_test "f"
