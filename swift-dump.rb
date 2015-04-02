@@ -37,7 +37,10 @@ DUMP
 
 			classes.each do |sclass|
 				c_name = class_name(sclass)
+				out_file = File.new("#{c_name.split('.')[1]}.swift", "w")
+
 				dump << "class #{c_name.split('.')[1]} {\n"
+				out_file.puts("class #{c_name.split('.')[1]} {\n")
 
 				variables(sclass).each do |var|
 					v = Swift::demangle_symbol(var).split('.')[2]
@@ -61,6 +64,7 @@ DUMP
 					end
 
 					dump << "#{declaration} #{v}: #{type}#{init}\n"
+					out_file.puts("#{declaration} #{v}: #{type}#{init}\n")
 				end
 
 				functions(sclass).each do |func|
@@ -75,9 +79,12 @@ DUMP
 					end
 
 					dump << "func #{f} {#{return_statement}}\n"
+					out_file.puts("func #{f} {#{return_statement}}\n")
 				end
 
 				dump << "}\n"
+				out_file.puts("}\n")
+				out_file.close
 			end
 
 			dump
