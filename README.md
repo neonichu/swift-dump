@@ -1,6 +1,7 @@
 # Swift Dump
 
 [![Build Status](http://img.shields.io/travis/neonichu/swift-dump.svg?style=flat)](https://travis-ci.org/neonichu/swift-dump)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 PoC of a class-dumpy tool for Swift classes.
 
@@ -29,7 +30,7 @@ This is __very__ limited right now, with no support for structs, generics or ini
 
 ## Author
 
-Boris Bügling, boris@icculus.org
+Boris Bügling, boris@icculus.org
 
 ## Help needed
 
